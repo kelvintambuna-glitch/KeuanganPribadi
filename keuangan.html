@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Keuangan Pribadi</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0f172a;
+      color: #e5e7eb;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #020617;
+      margin: 24px;
+      padding: 24px;
+      border-radius: 16px;
+      max-width: 900px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      border: 1px solid #1f2937;
+    }
+
+    h1 {
+      margin: 0;
+      color: #38bdf8;
+      font-size: 24px;
+    }
+
+    .subtitle {
+      color: #9ca3af;
+      font-size: 14px;
+      margin-top: 4px;
+      margin-bottom: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1.1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: #020617;
+      border-radius: 14px;
+      padding: 16px;
+      border: 1px solid #1f2937;
+    }
+
+    .card-title {
+      font-size: 16px;
+      margin-bottom: 8px;
+      color: #e5e7eb;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+      color: #d1d5db;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 13px;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 1px #0ea5e9;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .row > div {
+      flex: 1;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .btn-primary {
+      background: #38bdf8;
+      color: #0f172a;
+    }
+
+    .btn-primary:hover {
+      background: #0ea5e9;
+    }
+
+    .btn-secondary {
+      background: #111827;
+      color: #e5e7eb;
+      border: 1px solid #374151;
+      margin-left: 8px;
+    }
+
+    .btn-secondary:hover {
+      background: #1f2937;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .chip {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      color: #9ca3af;
+    }
+
+    .summary-row {
+      display: flex;
+      flex-direction: column;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .summary-row > div:first-child {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .summary-row strong {
+      color: #e5e7eb;
+    }
+
+    .summary-total {
+      border-top: 1px solid #374151;
+      margin-top: 8px;
+      padding-top: 8px;
+      font-size: 13px;
+    }
+
+    .summary-total strong {
+      font-size: 14px;
+      color: #f9fafb;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #0f172a;
+      border: 1px solid #1f2937;
+      color: #9ca3af;
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    .pill-dot.red {
+      background: #ef4444;
+    }
+
+    .table-wrapper {
+      max-height: 260px;
+      overflow-y: auto;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th, td {
+      padding: 6px 8px;
+      text-align: left;
+      border-bottom: 1px solid #111827;
+    }
+
+    th {
+      background: #020617;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .amount-out {
+      color: #f97373;
+    }
+
+    .amount-in {
+      color: #4ade80;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: #111827;
+      border: 1px solid #1f2937;
+    }
+
+    small {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .btn-danger {
+      background: #7f1d1d;
+      border: 1px solid #fecaca;
+      color: #fee2e2;
+    }
+
+    .btn-danger:hover {
+      background: #991b1b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Keuangan Pribadi</h1>
+    <div class="subtitle">Catat pemasukan & pengeluaran, lihat total per kategori per bulan.</div>
+
+    <div class="grid">
+      <!-- FORM INPUT -->
+      <div class="card">
+        <div class="card-title">Tambah Transaksi</div>
+        <div class="chips">
+          <span class="chip">Contoh kategori: makan, bensin, kos, kebutuhan bulanan, jajan</span>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="tipe">Tipe</label>
+            <select id="tipe">
+              <option value="masuk">Pemasukan</option>
+              <option value="keluar">Pengeluaran</option>
+            </select>
+          </div>
+          <div>
+            <label for="tanggal">Tanggal</label>
+            <input type="date" id="tanggal">
+          </div>
+        </div>
+
+        <label for="kategori">Kategori</label>
+        <input type="text" id="kategori" placeholder="makan / bensin / kos / dll">
+
+        <label for="jumlah">Jumlah (Rp)</label>
+        <input type="number" id="jumlah" placeholder="contoh: 25000">
+
+        <label for="catatan">Catatan</label>
+        <textarea id="catatan" placeholder="opsional: misal 'sarapan', 'isi bensin', dll"></textarea>
+
+        <button class="btn-primary" id="btnTambah">Simpan Transaksi</button>
+        <button class="btn-secondary" id="btnClear">Bersihkan Form</button>
+        <button class="btn-danger" id="btnResetSemua">Hapus Semua Transaksi</button>
+
+        <div style="margin-top:8px;">
+          <small>* Data disimpan di browser (localStorage) di laptop ini. Kalau buka di HP / browser lain, datanya beda.</small>
+        </div>
+      </div>
+
+      <!-- RINGKASAN -->
+      <div class="card">
+        <div class="card-title">Ringkasan Bulan Ini</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <div class="pill">
+            <span class="pill-dot"></span>
+            <span id="labelBulan">Bulan ini</span>
+          </div>
+          <small id="totalTransaksi">0 transaksi</small>
+        </div>
+
+        <div id="summaryKategori">
+          <small>Belum ada transaksi. Tambahkan transaksi dan ringkasan per kategori akan muncul di sini.</small>
+        </div>
+
+        <div class="summary-total" id="summaryTotal"></div>
+      </div>
+    </div>
+
+    <!-- RIWAYAT -->
+    <div class="card" style="margin-top:20px;">
+      <div class="card-title">Riwayat Transaksi</div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Tipe</th>
+            <th>Kategori</th>
+            <th>Jumlah</th>
+            <th>Catatan</th>
+            <th>Aksi</th>
+          </tr>
+          </thead>
+          <tbody id="tabelBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ======== STORAGE & BUDGET ========
+    const STORAGE_KEY = 'transaksiKeuangan';
+
+    // Budget per kategori (ubah sesuka kamu)
+    const budgetPerKategori = {
+      'makan': 800000,
+      'bensin': 300000,
+      'jajan': 200000,
+      'kos': 1000000
+    };
+
+    let transaksi = [];
+
+    function loadTransaksiDariStorage() {
+      const data = localStorage.getItem(STORAGE_KEY);
+      if (data) {
+        try {
+          transaksi = JSON.parse(data);
+        } catch (e) {
+          console.error('Gagal parse data dari localStorage:', e);
+          transaksi = [];
+        }
+      } else {
+        transaksi = [];
+      }
+    }
+
+    function simpanKeStorage() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(transaksi));
+    }
+
+    // ======== DOM ========
+    const inputTanggal = document.getElementById('tanggal');
+    const inputTipe = document.getElementById('tipe');
+    const inputKategori = document.getElementById('kategori');
+    const inputJumlah = document.getElementById('jumlah');
+    const inputCatatan = document.getElementById('catatan');
+    const tabelBody = document.getElementById('tabelBody');
+    const summaryKategoriDiv = document.getElementById('summaryKategori');
+    const summaryTotalDiv = document.getElementById('summaryTotal');
+    const totalTransaksiSpan = document.getElementById('totalTransaksi');
+    const labelBulanSpan = document.getElementById('labelBulan');
+
+    // default tanggal = hari ini
+    inputTanggal.valueAsNumber = Date.now() - (new Date()).getTimezoneOffset() * 60000;
+
+    // ======== EVENT ========
+    document.getElementById('btnTambah').addEventListener('click', () => {
+      const tipe = inputTipe.value;
+      const tanggal = inputTanggal.value;
+      const kategori = inputKategori.value.trim();
+      const jumlahStr = inputJumlah.value.trim();
+      const catatan = inputCatatan.value.trim();
+
+      if (!tanggal || !kategori || !jumlahStr) {
+        alert('Tanggal, kategori, dan jumlah wajib diisi.');
+        return;
+      }
+
+      const jumlah = Number(jumlahStr);
+      if (isNaN(jumlah) || jumlah <= 0) {
+        alert('Jumlah harus berupa angka lebih dari 0.');
+        return;
+      }
+
+      transaksi.push({
+        id: Date.now(), // id unik
+        tanggal,
+        tipe,
+        kategori,
+        jumlah,
+        catatan
+      });
+
+      simpanKeStorage();
+      renderTabel();
+      renderRingkasan();
+
+      inputJumlah.value = '';
+      inputCatatan.value = '';
+      inputJumlah.focus();
+    });
+
+    document.getElementById('btnClear').addEventListener('click', () => {
+      inputKategori.value = '';
+      inputJumlah.value = '';
+      inputCatatan.value = '';
+    });
+
+    document.getElementById('btnResetSemua').addEventListener('click', () => {
+      const yakin = confirm('Yakin mau hapus semua transaksi? Data tidak bisa dikembalikan.');
+      if (!yakin) return;
+
+      transaksi = [];
+      simpanKeStorage();
+      renderTabel();
+      renderRingkasan();
+    });
+
+    // ======== RENDER TABEL ========
+    function renderTabel() {
+      tabelBody.innerHTML = '';
+      if (transaksi.length === 0) {
+        totalTransaksiSpan.textContent = '0 transaksi';
+        return;
+      }
+
+      for (const t of transaksi) {
+        const tr = document.createElement('tr');
+
+        const tdTgl = document.createElement('td');
+        tdTgl.textContent = t.tanggal;
+        tr.appendChild(tdTgl);
+
+        const tdTipe = document.createElement('td');
+        const labelTipe = t.tipe === 'masuk' ? 'Pemasukan' : 'Pengeluaran';
+        tdTipe.innerHTML = `<span class="badge">${labelTipe}</span>`;
+        tr.appendChild(tdTipe);
+
+        const tdKat = document.createElement('td');
+        tdKat.textContent = t.kategori;
+        tr.appendChild(tdKat);
+
+        const tdJml = document.createElement('td');
+        const formatted = 'Rp ' + t.jumlah.toLocaleString('id-ID');
+        tdJml.textContent = formatted;
+        tdJml.className = t.tipe === 'masuk' ? 'amount-in' : 'amount-out';
+        tr.appendChild(tdJml);
+
+        const tdCat = document.createElement('td');
+        tdCat.textContent = t.catatan;
+        tr.appendChild(tdCat);
+
+        // AKSI: HAPUS SATU TRANSAKSI
+        const tdAksi = document.createElement('td');
+        const btnHapus = document.createElement('button');
+        btnHapus.textContent = 'Hapus';
+        btnHapus.style.fontSize = '11px';
+        btnHapus.style.padding = '4px 8px';
+        btnHapus.style.borderRadius = '999px';
+        btnHapus.style.border = '1px solid #4b5563';
+        btnHapus.style.background = '#111827';
+        btnHapus.style.color = '#e5e7eb';
+        btnHapus.style.cursor = 'pointer';
+
+        btnHapus.addEventListener('click', () => {
+          const yakin = confirm('Yakin mau hapus transaksi ini?');
+          if (!yakin) return;
+
+          const index = transaksi.findIndex(item => item.id === t.id);
+          if (index !== -1) {
+            transaksi.splice(index, 1);
+            simpanKeStorage();
+            renderTabel();
+            renderRingkasan();
+          }
+        });
+
+        tdAksi.appendChild(btnHapus);
+        tr.appendChild(tdAksi);
+
+        tabelBody.appendChild(tr);
+      }
+
+      totalTransaksiSpan.textContent = transaksi.length + ' transaksi';
+    }
+
+    // ======== RENDER RINGKASAN ========
+    function renderRingkasan() {
+      if (transaksi.length === 0) {
+        summaryKategoriDiv.innerHTML = '<small>Belum ada transaksi.</small>';
+        summaryTotalDiv.innerHTML = '';
+        return;
+      }
+
+      const now = new Date();
+      const bulan = now.getMonth() + 1;
+      const tahun = now.getFullYear();
+      labelBulanSpan.textContent = `Bulan ${bulan.toString().padStart(2, '0')} - ${tahun}`;
+
+      let totalMasuk = 0;
+      let totalKeluar = 0;
+      const perKategoriKeluar = {};
+
+      for (const t of transaksi) {
+        const tDate = new Date(t.tanggal);
+        const tMonth = tDate.getMonth() + 1;
+        const tYear = tDate.getFullYear();
+        if (tMonth !== bulan || tYear !== tahun) continue;
+
+        if (t.tipe === 'masuk') {
+          totalMasuk += t.jumlah;
+        } else {
+          totalKeluar += t.jumlah;
+          const key = t.kategori;
+          perKategoriKeluar[key] = (perKategoriKeluar[key] || 0) + t.jumlah;
+        }
+      }
+
+      const saldo = totalMasuk - totalKeluar;
+
+      if (Object.keys(perKategoriKeluar).length === 0) {
+        summaryKategoriDiv.innerHTML = '<small>Belum ada pengeluaran di bulan ini.</small>';
+      } else {
+        summaryKategoriDiv.innerHTML = '';
+        for (const [kat, jml] of Object.entries(perKategoriKeluar)) {
+          const div = document.createElement('div');
+          div.className = 'summary-row';
+
+          const katLower = kat.toLowerCase();
+          const budget = budgetPerKategori[katLower];
+          let tambahan = '';
+
+          if (budget) {
+            const persen = Math.round((jml / budget) * 100);
+            if (jml > budget) {
+              tambahan = `<small style="color:#f97373;">⚠️ Melebihi budget (${persen}% dari Rp ${budget.toLocaleString('id-ID')})</small>`;
+            } else {
+              tambahan = `<small style="color:#a5b4fc;">${persen}% dari budget Rp ${budget.toLocaleString('id-ID')}</small>`;
+            }
+          }
+
+          div.innerHTML = `
+            <div>
+              <span>${kat}</span>
+              <strong>Rp ${jml.toLocaleString('id-ID')}</strong>
+            </div>
+            ${tambahan}
+          `;
+          summaryKategoriDiv.appendChild(div);
+        }
+      }
+
+      let htmlTotal = `
+        <div> Total pemasukan: <strong class="amount-in">Rp ${totalMasuk.toLocaleString('id-ID')}</strong></div>
+        <div> Total pengeluaran: <strong class="amount-out">Rp ${totalKeluar.toLocaleString('id-ID')}</strong></div>
+        <div style="margin-top:4px;"> Saldo bulan ini: <strong>${saldo >= 0 ? 'Rp ' + saldo.toLocaleString('id-ID') : '- Rp ' + Math.abs(saldo).toLocaleString('id-ID')}</strong></div>
+      `;
+
+      if (saldo > 0) {
+        htmlTotal += `<div><small>👍 Masih ada sisa saldo bulan ini.</small></div>`;
+      } else if (saldo === 0) {
+        htmlTotal += `<div><small>😐 Bulan ini pas-pasan, tidak ada sisa.</small></div>`;
+      } else {
+        htmlTotal += `<div><small>⚠️ Bulan ini minus, pengeluaran perlu dikontrol.</small></div>`;
+      }
+
+      summaryTotalDiv.innerHTML = htmlTotal;
+    }
+
+    // ======== INIT ========
+    loadTransaksiDariStorage();
+    renderTabel();
+    renderRingkasan();
+  </script>
+</body>
+</html>
